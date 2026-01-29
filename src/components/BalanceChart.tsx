@@ -59,7 +59,7 @@ export function BalanceChart({ optimalPlan, minOnlyPlan }: Props) {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="month" label={{ value: 'Month', position: 'insideBottom', offset: -5 }} />
           <YAxis label={{ value: 'Balance ($)', angle: -90, position: 'insideLeft' }} />
-          <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
+          <Tooltip formatter={(value) => `$${Number(value).toFixed(2)}`} />
           <Legend />
           {cardNames.map((name, i) => (
             <Line
