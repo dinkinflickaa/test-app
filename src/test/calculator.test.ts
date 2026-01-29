@@ -1,4 +1,5 @@
-import { computeMinPayment } from '../calculator'
+import { computeMinPayment, calculateOptimalPlan } from '../calculator'
+import type { CreditCard } from '../types'
 
 describe('computeMinPayment', () => {
   it('returns 2% of balance when greater than $25', () => {
@@ -23,5 +24,75 @@ describe('computeMinPayment', () => {
 
   it('returns 0 for zero balance', () => {
     expect(computeMinPayment(0, null)).toBe(0)
+  })
+})
+
+describe('calculateOptimalPlan', () => {
+  it('pays off a single card correctly', () => {
+    const cards: CreditCard[] = [
+      { id: '1', name: 'Card A', balance: 1000, apr: 20, minPaymentOverride: null },
+    ]
+    const plan = calculateOptimalPlan(cards, 100)
+
+    expect(plan.months).toBeGreaterThan(0)
+    expect(plan.months).toBeLessThan(360)
+    expect(plan.totalPaid).toBeGreaterThan(1000)
+    expect(plan.totalInterest).toBeGreaterThan(0)
+    // Last entry should have remaining balance of 0
+    const lastEntries = plan.schedule.filter(e => e.month === plan.months)
+    expect(lastEntries.every(e => e.remainingBalance === 0)).toBe(true)
+  })
+
+  it('prioritizes highest APR card with extra payment', () => {
+    const cards: CreditCard[] = [
+      { id: '1', name: 'Low APR', balance: 1000, apr: 10, minPaymentOverride: null },
+      { id: '2', name: 'High APR', balance: 1000, apr: 25, minPaymentOverride: null },
+    ]
+    const plan = calculateOptimalPlan(cards, 200)
+
+    // In month 1, High APR card should get a larger payment than Low APR
+    const month1 = plan.schedule.filter(e => e.month === 1)
+    const highAprPayment = month1.find(e => e.cardId === '2')!.payment
+    const lowAprPayment = month1.find(e => e.cardId === '1')!.payment
+    expect(highAprPayment).toBeGreaterThan(lowAprPayment)
+  })
+
+  it('handles zero extra payment (minimums only)', () => {
+    const cards: CreditCard[] = [
+      { id: '1', name: 'Card A', balance: 1000, apr: 20, minPaymentOverride: null },
+    ]
+    const plan = calculateOptimalPlan(cards, 0)
+
+    expect(plan.months).toBeGreaterThan(0)
+    expect(plan.totalPaid).toBeGreaterThan(1000)
+  })
+
+  it('caps simulation at 360 months', () => {
+    const cards: CreditCard[] = [
+      { id: '1', name: 'Card A', balance: 100000, apr: 30, minPaymentOverride: null },
+    ]
+    // Very small extra payment — will take extremely long
+    const plan = calculateOptimalPlan(cards, 0)
+
+    expect(plan.months).toBeLessThanOrEqual(360)
+  })
+
+  it('handles extra payment larger than total debt', () => {
+    const cards: CreditCard[] = [
+      { id: '1', name: 'Card A', balance: 500, apr: 15, minPaymentOverride: null },
+    ]
+    const plan = calculateOptimalPlan(cards, 10000)
+
+    expect(plan.months).toBe(1)
+    expect(plan.totalPaid).toBeCloseTo(500 + 500 * (0.15 / 12), 2)
+  })
+
+  it('returns empty plan for empty cards array', () => {
+    const plan = calculateOptimalPlan([], 100)
+
+    expect(plan.months).toBe(0)
+    expect(plan.totalInterest).toBe(0)
+    expect(plan.totalPaid).toBe(0)
+    expect(plan.schedule).toEqual([])
   })
 })
