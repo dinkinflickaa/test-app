@@ -118,3 +118,7 @@ export function calculateOptimalPlan(
     months: month,
   }
 }
+
+export function calculateMinimumOnlyPlan(cards: CreditCard[]): PaymentPlan {
+  return calculateOptimalPlan(cards, 0)
+}

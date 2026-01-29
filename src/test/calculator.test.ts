@@ -1,4 +1,4 @@
-import { computeMinPayment, calculateOptimalPlan } from '../calculator'
+import { computeMinPayment, calculateOptimalPlan, calculateMinimumOnlyPlan } from '../calculator'
 import type { CreditCard } from '../types'
 
 describe('computeMinPayment', () => {
@@ -94,5 +94,33 @@ describe('calculateOptimalPlan', () => {
     expect(plan.totalInterest).toBe(0)
     expect(plan.totalPaid).toBe(0)
     expect(plan.schedule).toEqual([])
+  })
+})
+
+describe('calculateMinimumOnlyPlan', () => {
+  it('is equivalent to optimal plan with zero extra payment', () => {
+    const cards: CreditCard[] = [
+      { id: '1', name: 'Card A', balance: 3000, apr: 18, minPaymentOverride: null },
+      { id: '2', name: 'Card B', balance: 1500, apr: 22, minPaymentOverride: null },
+    ]
+
+    const minOnly = calculateMinimumOnlyPlan(cards)
+    const optimalZero = calculateOptimalPlan(cards, 0)
+
+    expect(minOnly.totalInterest).toBe(optimalZero.totalInterest)
+    expect(minOnly.totalPaid).toBe(optimalZero.totalPaid)
+    expect(minOnly.months).toBe(optimalZero.months)
+  })
+
+  it('pays more interest than optimal plan with extra payment', () => {
+    const cards: CreditCard[] = [
+      { id: '1', name: 'Card A', balance: 5000, apr: 20, minPaymentOverride: null },
+    ]
+
+    const minOnly = calculateMinimumOnlyPlan(cards)
+    const optimal = calculateOptimalPlan(cards, 200)
+
+    expect(minOnly.totalInterest).toBeGreaterThan(optimal.totalInterest)
+    expect(minOnly.months).toBeGreaterThan(optimal.months)
   })
 })
