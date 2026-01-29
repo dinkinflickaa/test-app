@@ -1,34 +1,60 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import type { CreditCard, PaymentPlan } from './types'
+import { calculateOptimalPlan, calculateMinimumOnlyPlan } from './calculator'
+import { CardInputForm } from './components/CardInputForm'
+import { ExtraPaymentInput } from './components/ExtraPaymentInput'
+import { ResultsSummary } from './components/ResultsSummary'
+import { PaymentSchedule } from './components/PaymentSchedule'
+import { BalanceChart } from './components/BalanceChart'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [cards, setCards] = useState<CreditCard[]>([
+    { id: crypto.randomUUID(), name: '', balance: 0, apr: 0, minPaymentOverride: null },
+  ])
+  const [extraPayment, setExtraPayment] = useState(0)
+  const [optimalPlan, setOptimalPlan] = useState<PaymentPlan | null>(null)
+  const [minOnlyPlan, setMinOnlyPlan] = useState<PaymentPlan | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleCalculate = () => {
+    setError(null)
+
+    const validCards = cards.filter(c => c.balance > 0)
+    if (validCards.length === 0) {
+      setError('Please enter at least one card with a balance greater than zero.')
+      return
+    }
+
+    const invalidApr = validCards.find(c => c.apr < 0 || c.apr > 100)
+    if (invalidApr) {
+      setError(`APR for "${invalidApr.name || 'unnamed card'}" must be between 0% and 100%.`)
+      return
+    }
+
+    const optimal = calculateOptimalPlan(validCards, extraPayment)
+    const minOnly = calculateMinimumOnlyPlan(validCards)
+    setOptimalPlan(optimal)
+    setMinOnlyPlan(minOnly)
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="app">
+      <h1>Debt Repayment Calculator</h1>
+      <CardInputForm cards={cards} onChange={setCards} />
+      <ExtraPaymentInput value={extraPayment} onChange={setExtraPayment} />
+      {error && <div className="error-message">{error}</div>}
+      <button className="btn-calculate" onClick={handleCalculate}>
+        Calculate
+      </button>
+      {optimalPlan && minOnlyPlan && (
+        <>
+          <ResultsSummary optimalPlan={optimalPlan} minOnlyPlan={minOnlyPlan} />
+          <PaymentSchedule schedule={optimalPlan.schedule} />
+          <BalanceChart optimalPlan={optimalPlan} minOnlyPlan={minOnlyPlan} />
+        </>
+      )}
+    </div>
   )
 }
 
