@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import './ExtraPaymentInput.css'
 
 interface Props {
   value: number
@@ -21,15 +22,17 @@ export function ExtraPaymentInput({ value, onChange }: Props) {
   return (
     <div className="extra-payment-input">
       <label>
-        <h2>Extra Monthly Payment ($)</h2>
-        <input
-          type="number"
-          value={localValue}
-          min={0}
-          step={10}
-          onChange={handleChange}
-          style={{ padding: '0.5rem', fontSize: '1rem', width: '150px' }}
-        />
+        <h2>Extra Monthly Payment</h2>
+        <div className="input-wrapper">
+          <span className="input-prefix">$</span>
+          <input
+            type="number"
+            value={localValue}
+            min={0}
+            step={10}
+            onChange={handleChange}
+          />
+        </div>
       </label>
     </div>
   )

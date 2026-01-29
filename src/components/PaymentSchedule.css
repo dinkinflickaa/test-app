@@ -1,27 +1,43 @@
+/* ── Payment Schedule (Glassmorphism) ───────────────── */
+
 .payment-schedule {
-  margin: 1.5rem 0;
+  margin: 0;
 }
 
 .month-group {
   margin-bottom: 0.5rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
   overflow: hidden;
+  transition: border-color 200ms ease;
+}
+
+.month-group:hover {
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .month-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 1rem;
-  background: #f8f9fa;
+  padding: 0.7rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
   cursor: pointer;
   user-select: none;
-  font-weight: bold;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #CBD5E1;
+  transition: background 200ms ease;
 }
 
 .month-header:hover {
-  background: #e9ecef;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.month-header span:last-child {
+  color: #64748B;
+  font-size: 0.7rem;
 }
 
 .month-table {
@@ -31,15 +47,28 @@
 
 .month-table th,
 .month-table td {
-  padding: 0.4rem 0.75rem;
+  padding: 0.55rem 1rem;
   text-align: right;
-  border-top: 1px solid #eee;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 0.85rem;
 }
 
 .month-table th {
-  background: #f8f9fa;
-  font-size: 0.8rem;
-  color: #666;
+  background: rgba(255, 255, 255, 0.03);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.month-table td {
+  color: #CBD5E1;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  background: transparent;
 }
 
 .month-table td:first-child,
@@ -47,7 +76,25 @@
   text-align: left;
 }
 
+.month-table td:first-child {
+  font-family: 'Inter', sans-serif;
+  color: #E2E8F0;
+  font-weight: 600;
+}
+
+.month-table tbody tr {
+  transition: background 150ms ease;
+}
+
+.month-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.month-table tbody tr:hover td {
+  background: transparent;
+}
+
 .paid-off {
-  color: #27ae60;
-  font-weight: bold;
+  color: #34D399;
+  font-weight: 600;
 }

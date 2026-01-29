@@ -41,17 +41,34 @@ function App() {
   return (
     <div className="app">
       <h1>Debt Repayment Calculator</h1>
-      <CardInputForm cards={cards} onChange={setCards} />
-      <ExtraPaymentInput value={extraPayment} onChange={setExtraPayment} />
+      <p className="app-subtitle">
+        Optimize your payments with the avalanche method to minimize interest
+      </p>
+
+      <div className="section-card">
+        <CardInputForm cards={cards} onChange={setCards} />
+      </div>
+
+      <div className="section-card">
+        <ExtraPaymentInput value={extraPayment} onChange={setExtraPayment} />
+      </div>
+
       {error && <div className="error-message">{error}</div>}
+
       <button className="btn-calculate" onClick={handleCalculate}>
-        Calculate
+        Calculate Optimal Plan
       </button>
+
       {optimalPlan && minOnlyPlan && (
         <>
+          <hr className="results-divider" />
           <ResultsSummary optimalPlan={optimalPlan} minOnlyPlan={minOnlyPlan} />
-          <PaymentSchedule schedule={optimalPlan.schedule} />
-          <BalanceChart optimalPlan={optimalPlan} minOnlyPlan={minOnlyPlan} />
+          <div className="section-card">
+            <BalanceChart optimalPlan={optimalPlan} minOnlyPlan={minOnlyPlan} />
+          </div>
+          <div className="section-card">
+            <PaymentSchedule schedule={optimalPlan.schedule} />
+          </div>
         </>
       )}
     </div>

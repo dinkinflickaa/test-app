@@ -1,0 +1,29 @@
+/* ── Balance Chart (Glassmorphism) ──────────────────── */
+
+.balance-chart {
+  margin: 0;
+}
+
+.chart-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: #94A3B8;
+  font-size: 0.85rem;
+  transition: color 200ms ease;
+}
+
+.chart-toggle:hover {
+  color: #CBD5E1;
+}
+
+.chart-toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #8B5CF6;
+  cursor: pointer;
+}

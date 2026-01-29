@@ -34,7 +34,7 @@ describe('App', () => {
     await user.clear(balanceInputs[3]) // extra payment
     await user.type(balanceInputs[3], '200')
 
-    await user.click(screen.getByText('Calculate'))
+    await user.click(screen.getByText('Calculate Optimal Plan'))
 
     // Results should appear
     expect(screen.getByText(/Interest Saved/)).toBeInTheDocument()
@@ -46,7 +46,7 @@ describe('App', () => {
     const user = userEvent.setup()
     render(<App />)
 
-    await user.click(screen.getByText('Calculate'))
+    await user.click(screen.getByText('Calculate Optimal Plan'))
 
     expect(screen.getByText(/at least one card with a balance/i)).toBeInTheDocument()
   })

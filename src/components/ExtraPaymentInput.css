@@ -1,0 +1,42 @@
+/* ── Extra Payment Input (Glassmorphism) ────────────── */
+
+.extra-payment-input label {
+  display: block;
+}
+
+.input-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.input-prefix {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94A3B8;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.extra-payment-input input {
+  padding: 0.55rem 0.75rem 0.55rem 1.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: #F8FAFC;
+  width: 180px;
+  outline: none;
+  transition: border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
+}
+
+.extra-payment-input input:focus {
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+}
